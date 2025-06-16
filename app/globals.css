@@ -1,0 +1,205 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* Light mode colors */
+    --background: 0 0% 100%;
+    --foreground: 222.2 84% 4.9%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 222.2 84% 4.9%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 222.2 84% 4.9%;
+
+    --primary: 222.2 47.4% 11.2%;
+    --primary-foreground: 210 40% 98%;
+
+    --secondary: 210 40% 96.1%;
+    --secondary-foreground: 222.2 47.4% 11.2%;
+
+    --muted: 210 40% 96.1%;
+    --muted-foreground: 215.4 16.3% 46.9%;
+
+    --accent: 210 40% 96.1%;
+    --accent-foreground: 222.2 47.4% 11.2%;
+
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214.3 31.8% 91.4%;
+    --input: 214.3 31.8% 91.4%;
+    --ring: 222.2 84% 4.9%;
+
+    --radius: 0.5rem;
+
+    --chart-1: 172 66% 50%;
+    --chart-2: 201 96% 32%;
+    --chart-3: 245 58% 51%;
+    --chart-4: 343 76% 60%;
+    --chart-5: 28 89% 67%;
+
+    /* Custom dark theme variables */
+    --bg-primary: 0 0% 100%;
+    --bg-secondary: 210 40% 98%;
+    --surface: 0 0% 100%;
+    --surface-elevated: 210 40% 96.1%;
+    --text-primary: 222.2 84% 4.9%;
+    --text-secondary: 215.4 16.3% 46.9%;
+    --accent-primary: 172 66% 50%;
+    --accent-secondary: 172 66% 45%;
+    --glass-panel: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 0, 0, 0.1);
+  }
+
+  .dark {
+    /* Dark mode colors */
+    --background: 0 0% 7.1%;
+    --foreground: 0 0% 90%;
+
+    --card: 0 0% 11.8%;
+    --card-foreground: 0 0% 90%;
+
+    --popover: 0 0% 11.8%;
+    --popover-foreground: 0 0% 90%;
+
+    --primary: 0 0% 90%;
+    --primary-foreground: 222.2 47.4% 11.2%;
+
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 90%;
+
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 90%;
+
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 90%;
+
+    --border: 0 0% 20.6%;
+    --input: 0 0% 11.8%;
+    --ring: 0 0% 83.1%;
+
+    /* Custom dark theme variables */
+    --bg-primary: 0 0% 7.1%;
+    --bg-secondary: 0 0% 9.4%;
+    --surface: 0 0% 11.8%;
+    --surface-elevated: 0 0% 14.9%;
+    --text-primary: 0 0% 90%;
+    --text-secondary: 0 0% 70%;
+    --accent-primary: 172 66% 50%;
+    --accent-secondary: 172 66% 45%;
+    --glass-panel: rgba(255, 255, 255, 0.05);
+    --glass-border: rgba(0, 0, 0, 0.3);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: hsl(var(--bg-primary));
+    color: hsl(var(--text-primary));
+    transition: background-color 0.3s ease, color 0.3s ease;
+  }
+
+  /* Dark mode specific styles */
+  .dark {
+    color-scheme: dark;
+  }
+
+  /* Glass panel utility */
+  .glass-panel {
+    background: var(--glass-panel);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Form elements in dark mode */
+  .dark input,
+  .dark textarea,
+  .dark select {
+    background: hsl(var(--surface));
+    border-color: hsl(var(--border));
+    color: hsl(var(--text-primary));
+  }
+
+  .dark input::placeholder,
+  .dark textarea::placeholder {
+    color: hsl(var(--text-secondary));
+    opacity: 0.7;
+  }
+
+  .dark input:focus,
+  .dark textarea:focus,
+  .dark select:focus {
+    border-color: hsl(var(--accent-primary));
+    box-shadow: 0 0 0 2px hsla(var(--accent-primary), 0.2);
+  }
+
+  /* Button styles */
+  .dark .btn-primary {
+    background: hsl(var(--accent-primary));
+    color: white;
+    border: none;
+  }
+
+  .dark .btn-primary:hover {
+    background: hsl(var(--accent-secondary));
+  }
+
+  .dark .btn-secondary {
+    background: transparent;
+    color: hsl(var(--text-primary));
+    border: 1px solid hsl(var(--border));
+  }
+
+  .dark .btn-secondary:hover {
+    background: hsl(var(--surface-elevated));
+    color: hsl(var(--text-primary));
+  }
+
+  /* Card hover effects */
+  .dark .card-hover:hover {
+    background: rgba(255, 255, 255, 0.08);
+    border-color: hsl(var(--accent-primary));
+  }
+
+  /* Table row hover */
+  .dark .table-row:hover {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  /* Chart colors for dark mode */
+  .dark .recharts-text {
+    fill: hsl(var(--text-secondary)) !important;
+  }
+
+  .dark .recharts-cartesian-axis-line,
+  .dark .recharts-cartesian-grid-horizontal line,
+  .dark .recharts-cartesian-grid-vertical line {
+    stroke: hsl(var(--border)) !important;
+  }
+}
+
+/* Smooth theme transitions */
+* {
+  transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
+}
+
+/* Prevent flash of unstyled content */
+html {
+  color-scheme: light dark;
+}
+
+html[data-theme="dark"] {
+  color-scheme: dark;
+}
