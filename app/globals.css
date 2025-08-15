@@ -41,7 +41,7 @@
     --chart-4: 343 76% 60%;
     --chart-5: 28 89% 67%;
 
-    /* Custom theme variables */
+    /* Custom dark theme variables */
     --bg-primary: 0 0% 100%;
     --bg-secondary: 210 40% 98%;
     --surface: 0 0% 100%;
@@ -50,8 +50,8 @@
     --text-secondary: 215.4 16.3% 46.9%;
     --accent-primary: 172 66% 50%;
     --accent-secondary: 172 66% 45%;
-    --glass-panel: rgba(255, 255, 255, 0.1);
-    --glass-border: rgba(255, 255, 255, 0.2);
+    --glass-panel: rgba(255, 255, 255, 0.8);
+    --glass-border: rgba(0, 0, 0, 0.1);
   }
 
   .dark {
@@ -94,7 +94,7 @@
     --accent-primary: 172 66% 50%;
     --accent-secondary: 172 66% 45%;
     --glass-panel: rgba(255, 255, 255, 0.05);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(0, 0, 0, 0.3);
   }
 }
 
@@ -115,39 +115,12 @@
     color-scheme: dark;
   }
 
-  /* Header blur effect */
-  header,
-  nav {
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    background: rgba(255, 255, 255, 0.1);
-  }
-
-  .dark header,
-  .dark nav {
-    background: rgba(0, 0, 0, 0.1);
-  }
-
-  /* Glassmorphism utility classes */
+  /* Glass panel utility */
   .glass-panel {
     background: var(--glass-panel);
     border: 1px solid var(--glass-border);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
-    border-radius: 1rem;
-  }
-
-  .glass-card {
-    background: rgba(255, 255, 255, 0.1);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 1rem;
-  }
-
-  .dark .glass-card {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
   }
 
   /* Form elements in dark mode */
@@ -215,40 +188,6 @@
   .dark .recharts-cartesian-grid-vertical line {
     stroke: hsl(var(--border)) !important;
   }
-
-  /* Loading states */
-  .loading-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    animation: shimmer 1.5s infinite;
-  }
-
-  .dark .loading-shimmer {
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
-  }
-
-  @keyframes shimmer {
-    0% {
-      transform: translateX(-100%);
-    }
-    100% {
-      transform: translateX(100%);
-    }
-  }
-
-  /* Accessibility improvements */
-  .focus-visible:focus {
-    outline: 2px solid hsl(var(--accent-primary));
-    outline-offset: 2px;
-  }
-
-  /* Performance optimizations */
-  .will-change-transform {
-    will-change: transform;
-  }
-
-  .will-change-opacity {
-    will-change: opacity;
-  }
 }
 
 /* Smooth theme transitions */
@@ -263,26 +202,4 @@ html {
 
 html[data-theme="dark"] {
   color-scheme: dark;
-}
-
-/* Mobile optimizations */
-@media (max-width: 768px) {
-  .container {
-    padding-left: 1rem;
-    padding-right: 1rem;
-  }
-
-  .glass-panel {
-    border-radius: 0.75rem;
-  }
-}
-
-/* Print styles */
-@media print {
-  .glass-panel,
-  .glass-card {
-    background: white !important;
-    border: 1px solid #ccc !important;
-    backdrop-filter: none !important;
-  }
 }
