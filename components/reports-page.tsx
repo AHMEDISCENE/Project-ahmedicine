@@ -1,224 +1,203 @@
 "use client"
 
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Badge } from "@/components/ui/badge"
-import { FileText, Download, Calendar, Clock, Play, Plus, Filter } from "lucide-react"
+import { Button } from "@/components/ui/button"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Input } from "@/components/ui/input"
+import { Label } from "@/components/ui/label"
+import { CalendarIcon, Download, FileText, Filter } from "lucide-react"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Calendar } from "@/components/ui/calendar"
+import { format } from "date-fns"
+import { useState } from "react"
 import { toast } from "@/hooks/use-toast"
 
 export function ReportsPage() {
-  const [runningReport, setRunningReport] = useState<string | null>(null)
+  const [reportType, setReportType] = useState("")
+  const [dateRange, setDateRange] = useState<{ from?: Date; to?: Date }>({})
+  const [clinicCode, setClinicCode] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
 
-  const savedReports = [
-    {
-      id: "1",
-      name: "Monthly Oncology Summary",
-      description: "Summary of all oncology cases for the current month",
-      lastRun: "2 days ago",
-      schedule: "Monthly",
-      format: "PDF",
-    },
-    {
-      id: "2",
-      name: "Treatment Outcomes by Tumour Type",
-      description: "Analysis of treatment outcomes categorized by tumour type",
-      lastRun: "1 week ago",
-      schedule: "Weekly",
-      format: "Excel",
-    },
-    {
-      id: "3",
-      name: "Species Distribution Report",
-      description: "Distribution of cases by species and breed",
-      lastRun: "3 days ago",
-      schedule: "On-demand",
-      format: "PDF",
-    },
-    {
-      id: "4",
-      name: "Survival Rate Analysis",
-      description: "Detailed survival rate analysis for different cancer types",
-      lastRun: "2 weeks ago",
-      schedule: "Monthly",
-      format: "Excel",
-    },
-  ]
+  const handleGenerateReport = async () => {
+    if (!reportType) {
+      toast({
+        title: "Missing Report Type",
+        description: "Please select a report type.",
+        variant: "destructive",
+      })
+      return
+    }
 
-  const scheduledReports = [
-    {
-      id: "5",
-      name: "Weekly Case Summary",
-      description: "Summary of new cases added in the past week",
-      nextRun: "Tomorrow",
-      schedule: "Weekly",
-      recipients: "Oncology Team",
-    },
-    {
-      id: "6",
-      name: "Monthly Analytics Report",
-      description: "Comprehensive analytics on treatment outcomes and trends",
-      nextRun: "In 12 days",
-      schedule: "Monthly",
-      recipients: "Management, Oncology Team",
-    },
-  ]
-
-  const handleRunReport = async (id: string, name: string) => {
-    setRunningReport(id)
-
-    // Simulate report generation
-    await new Promise((resolve) => setTimeout(resolve, 2000))
-
-    setRunningReport(null)
+    setIsLoading(true)
     toast({
-      title: "Report Generated",
-      description: `${name} has been generated successfully.`,
+      title: "Generating Report",
+      description: `Generating ${reportType} report...`,
     })
+
+    try {
+      // Simulate API call for report generation
+      await new Promise((resolve) => setTimeout(resolve, 2000)) // Simulate network delay
+
+      // In a real app, you'd make an API call here, e.g.:
+      // const response = await fetch('/api/generate-report', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify({ reportType, dateRange, clinicCode }),
+      // });
+      // if (!response.ok) throw new Error('Failed to generate report');
+      // const reportData = await response.json();
+
+      toast({
+        title: "Report Generated",
+        description: `${reportType} report is ready for download.`,
+      })
+    } catch (error: any) {
+      toast({
+        title: "Report Generation Failed",
+        description: error.message || "An error occurred while generating the report.",
+        variant: "destructive",
+      })
+    } finally {
+      setIsLoading(false)
+    }
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <Card className="bg-white/80 dark:bg-slate-900/80 backdrop-blur border-0 shadow-xl">
-        <CardHeader className="border-b border-slate-200/50 dark:border-slate-700/50">
-          <div className="flex justify-between items-center">
-            <div>
-              <CardTitle className="text-2xl font-bold text-slate-800 dark:text-slate-100 flex items-center">
-                <FileText className="h-6 w-6 mr-2 text-teal-600 dark:text-teal-500" />
-                Reports
-              </CardTitle>
-              <p className="text-slate-600 dark:text-slate-400">Generate and manage your oncology data reports</p>
-            </div>
-            <div className="flex space-x-2">
-              <Button variant="outline" className="flex items-center">
-                <Filter className="h-4 w-4 mr-2" />
-                Filter
+    <Card className="glass-panel shadow-lg">
+      <CardHeader>
+        <CardTitle className="text-xl font-bold text-slate-800 dark:text-slate-100">Custom Reports Builder</CardTitle>
+        <p className="text-slate-600 dark:text-slate-400">Generate detailed reports based on your oncology data.</p>
+      </CardHeader>
+      <CardContent>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+          {/* Report Type */}
+          <div>
+            <Label htmlFor="reportType" className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Report Type
+            </Label>
+            <Select value={reportType} onValueChange={setReportType} disabled={isLoading}>
+              <SelectTrigger className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600">
+                <SelectValue placeholder="Select a report type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="summary">Summary Report</SelectItem>
+                <SelectItem value="species-breakdown">Species Breakdown</SelectItem>
+                <SelectItem value="tumour-trends">Tumour Type Trends</SelectItem>
+                <SelectItem value="treatment-outcomes">Treatment Outcomes</SelectItem>
+                <SelectItem value="clinic-performance">Clinic Performance</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          {/* Date Range */}
+          <div>
+            <Label htmlFor="dateRange" className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Date Range
+            </Label>
+            <Popover>
+              <PopoverTrigger asChild>
+                <Button
+                  variant={"outline"}
+                  className={`w-full justify-start text-left font-normal bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600 ${
+                    !dateRange.from ? "text-slate-500 dark:text-slate-400" : ""
+                  }`}
+                  disabled={isLoading}
+                >
+                  <CalendarIcon className="mr-2 h-4 w-4" />
+                  {dateRange.from ? (
+                    dateRange.to ? (
+                      <>
+                        {format(dateRange.from, "LLL dd, y")} - {format(dateRange.to, "LLL dd, y")}
+                      </>
+                    ) : (
+                      format(dateRange.from, "LLL dd, y")
+                    )
+                  ) : (
+                    <span>Pick a date range</span>
+                  )}
+                </Button>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="start">
+                <Calendar mode="range" selected={dateRange} onSelect={setDateRange as any} numberOfMonths={2} />
+              </PopoverContent>
+            </Popover>
+          </div>
+
+          {/* Clinic Code Filter */}
+          <div>
+            <Label htmlFor="clinicCode" className="text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+              Clinic Code (Optional)
+            </Label>
+            <Input
+              id="clinicCode"
+              placeholder="Filter by clinic code"
+              value={clinicCode}
+              onChange={(e) => setClinicCode(e.target.value)}
+              className="bg-white dark:bg-slate-800 border-slate-300 dark:border-slate-600"
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+
+        <div className="flex justify-end space-x-4 pt-4 border-t border-slate-200 dark:border-slate-700">
+          <Button
+            variant="outline"
+            className="px-6 border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 bg-transparent"
+            disabled={isLoading}
+          >
+            <Filter className="w-4 h-4 mr-2" />
+            Apply Filters
+          </Button>
+          <Button
+            className="bg-teal-600 hover:bg-teal-700 text-white px-6"
+            onClick={handleGenerateReport}
+            disabled={isLoading || !reportType}
+          >
+            {isLoading ? (
+              <>
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2" />
+                Generating...
+              </>
+            ) : (
+              <>
+                <Download className="w-4 h-4 mr-2" />
+                Generate & Download
+              </>
+            )}
+          </Button>
+        </div>
+
+        <div className="mt-8">
+          <h3 className="font-semibold text-slate-800 dark:text-slate-200 mb-4">Recent Reports</h3>
+          <div className="space-y-4">
+            {/* Placeholder for recent reports */}
+            <div className="flex items-center justify-between p-4 glass-card rounded-lg border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center space-x-3">
+                <FileText className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+                <div>
+                  <h4 className="font-medium text-slate-800 dark:text-slate-200">Summary Report - Q1 2024</h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Generated: 2024-03-31</p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm">
+                Download
               </Button>
-              <Button className="bg-teal-600 hover:bg-teal-700 dark:bg-teal-700 dark:hover:bg-teal-600">
-                <Plus className="h-4 w-4 mr-2" />
-                New Report
+            </div>
+            <div className="flex items-center justify-between p-4 glass-card rounded-lg border border-slate-200 dark:border-slate-700">
+              <div className="flex items-center space-x-3">
+                <FileText className="w-5 h-5 text-slate-500 dark:text-slate-400" />
+                <div>
+                  <h4 className="font-medium text-slate-800 dark:text-slate-200">Tumour Trends - Feb 2024</h4>
+                  <p className="text-sm text-slate-600 dark:text-slate-400">Generated: 2024-02-29</p>
+                </div>
+              </div>
+              <Button variant="outline" size="sm">
+                Download
               </Button>
             </div>
           </div>
-        </CardHeader>
-
-        <CardContent className="p-6">
-          <Tabs defaultValue="saved">
-            <TabsList className="grid grid-cols-2 mb-6">
-              <TabsTrigger value="saved">
-                <Download className="h-4 w-4 mr-2" />
-                Saved Reports
-              </TabsTrigger>
-              <TabsTrigger value="scheduled">
-                <Calendar className="h-4 w-4 mr-2" />
-                Scheduled Reports
-              </TabsTrigger>
-            </TabsList>
-
-            <TabsContent value="saved" className="space-y-4">
-              {savedReports.map((report) => (
-                <div
-                  key={report.id}
-                  className="bg-white/60 dark:bg-slate-800/60 backdrop-blur rounded-lg p-4 border border-slate-200 dark:border-slate-700 hover:border-teal-200 dark:hover:border-teal-800 transition-all"
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium text-slate-800 dark:text-slate-200">{report.name}</h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{report.description}</p>
-
-                      <div className="flex items-center space-x-4 mt-2">
-                        <div className="flex items-center text-xs text-slate-500 dark:text-slate-400">
-                          <Clock className="h-3 w-3 mr-1" />
-                          Last run: {report.lastRun}
-                        </div>
-                        <Badge variant="outline" className="text-xs">
-                          {report.schedule}
-                        </Badge>
-                        <Badge variant="secondary" className="text-xs">
-                          {report.format}
-                        </Badge>
-                      </div>
-                    </div>
-
-                    <Button
-                      size="sm"
-                      onClick={() => handleRunReport(report.id, report.name)}
-                      disabled={runningReport === report.id}
-                      className="bg-teal-600 hover:bg-teal-700 dark:bg-teal-700 dark:hover:bg-teal-600"
-                    >
-                      {runningReport === report.id ? (
-                        <>
-                          <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1" />
-                          Running...
-                        </>
-                      ) : (
-                        <>
-                          <Play className="h-3 w-3 mr-1" />
-                          Run Now
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </TabsContent>
-
-            <TabsContent value="scheduled" className="space-y-4">
-              {scheduledReports.map((report) => (
-                <div
-                  key={report.id}
-                  className="bg-white/60 dark:bg-slate-800/60 backdrop-blur rounded-lg p-4 border border-slate-200 dark:border-slate-700 hover:border-teal-200 dark:hover:border-teal-800 transition-all"
-                >
-                  <div className="flex justify-between items-start">
-                    <div>
-                      <h3 className="font-medium text-slate-800 dark:text-slate-200">{report.name}</h3>
-                      <p className="text-sm text-slate-600 dark:text-slate-400 mt-1">{report.description}</p>
-
-                      <div className="flex items-center space-x-4 mt-2">
-                        <div className="flex items-center text-xs text-slate-500 dark:text-slate-400">
-                          <Calendar className="h-3 w-3 mr-1" />
-                          Next run: {report.nextRun}
-                        </div>
-                        <Badge variant="outline" className="text-xs">
-                          {report.schedule}
-                        </Badge>
-                        <div className="text-xs text-slate-500 dark:text-slate-400">
-                          Recipients: {report.recipients}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex space-x-2">
-                      <Button size="sm" variant="outline">
-                        Edit
-                      </Button>
-                      <Button
-                        size="sm"
-                        onClick={() => handleRunReport(report.id, report.name)}
-                        disabled={runningReport === report.id}
-                        className="bg-teal-600 hover:bg-teal-700 dark:bg-teal-700 dark:hover:bg-teal-600"
-                      >
-                        {runningReport === report.id ? (
-                          <>
-                            <div className="animate-spin rounded-full h-3 w-3 border-b-2 border-white mr-1" />
-                            Running...
-                          </>
-                        ) : (
-                          <>
-                            <Play className="h-3 w-3 mr-1" />
-                            Run Now
-                          </>
-                        )}
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
-    </div>
+        </div>
+      </CardContent>
+    </Card>
   )
 }
