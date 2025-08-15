@@ -83,13 +83,11 @@ export function Navigation({ user, profile }: NavigationProps) {
         </div>
 
         {/* Desktop Navigation - Centered */}
-        {user && (
-          <div className="hidden md:flex items-center justify-center flex-1 space-x-2 mx-8">
-            {navItems.map((item) => (
-              <NavButton key={item.id} item={item} />
-            ))}
-          </div>
-        )}
+        <div className="hidden md:flex items-center justify-center flex-1 space-x-2 mx-8">
+          {navItems.map((item) => (
+            <NavButton key={item.id} item={item} />
+          ))}
+        </div>
 
         {/* Desktop Right Side */}
         <div className="hidden md:flex items-center space-x-2">
@@ -134,29 +132,27 @@ export function Navigation({ user, profile }: NavigationProps) {
                   <span className="text-lg font-bold text-slate-800 dark:text-slate-100">VetOncoData</span>
                 </div>
 
-                {user && (
-                  <>
-                    {navItems.map((item) => (
-                      <NavButton key={item.id} item={item} mobile />
-                    ))}
+                {navItems.map((item) => (
+                  <NavButton key={item.id} item={item} mobile />
+                ))}
 
-                    <div className="pt-4 border-t">
-                      <div className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-100/50 dark:bg-slate-800/50 mb-4">
-                        <User className="h-4 w-4 text-slate-600 dark:text-slate-400" />
-                        <span className="text-sm text-slate-700 dark:text-slate-300">
-                          {profile?.full_name || user.email}
-                        </span>
-                      </div>
-                      <Button
-                        variant="outline"
-                        onClick={handleSignOut}
-                        className="w-full justify-start border-slate-300/50 dark:border-slate-600/50 bg-transparent"
-                      >
-                        <LogOut className="h-4 w-4 mr-2" />
-                        Sign Out
-                      </Button>
+                {user && (
+                  <div className="pt-4 border-t">
+                    <div className="flex items-center space-x-2 px-3 py-2 rounded-lg bg-slate-100/50 dark:bg-slate-800/50 mb-4">
+                      <User className="h-4 w-4 text-slate-600 dark:text-slate-400" />
+                      <span className="text-sm text-slate-700 dark:text-slate-300">
+                        {profile?.full_name || user.email}
+                      </span>
                     </div>
-                  </>
+                    <Button
+                      variant="outline"
+                      onClick={handleSignOut}
+                      className="w-full justify-start border-slate-300/50 dark:border-slate-600/50 bg-transparent"
+                    >
+                      <LogOut className="h-4 w-4 mr-2" />
+                      Sign Out
+                    </Button>
+                  </div>
                 )}
 
                 {!user && (
